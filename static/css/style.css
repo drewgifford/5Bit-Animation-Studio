@@ -8,6 +8,19 @@
 * {
     font-family: "dos", monospace !important;
     color: white;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1,h2,h3,h4,h5 {
+    color: white
+}
+.main {
+    width: calc(100% - 10px);
+    min-height: calc(100vh - 10px);
+    border: 4px double white;
+    margin: 5px;
 }
 
 a {
@@ -32,4 +45,81 @@ body {
 
 .nav-item {
     height: 100%;
+}
+
+.white {
+    color: #ffffff;
+}
+.btn {
+    background-color: transparent;
+    border-radius: 0px !important;
+    transition: none;
+}
+.btn.btn-primary {
+    border: 2px solid white;
+}
+.btn.btn-primary:hover {
+    background: white;
+    color: black;
+}
+.btn.btn-danger {
+    background: #ff0000;
+    border: 2px solid #ff0000;
+    color: black;
+}
+.btn.btn-danger:hover {
+    background: #ff0000;
+    color: white;
+}  
+.cyan {
+    color: #00ffff;
+}
+.violet {
+    color: #ff00ff;
+}
+.yellow {
+    color: #ffff00;
+}
+.silver {
+    color: #c0c0c0;
+}
+.red {
+    color: #ff0000;
+}
+.lime {
+    color: #00ff00;
+}
+.blue {
+    color: #0000ff;
+}
+.gray {
+    color: #808080;
+}
+.teal {
+    color: #008080;
+}
+.purple {
+    color: #800080;
+}
+.olive {
+    color: #808000;
+}
+.black {
+    color: #000000;
+}
+.maroon {
+    color: #800000;
+}
+.green {
+    color: #008000;
+}
+.navy {
+    color: #000080;
+}
+
+#board {
+    width: 50%;
+    background: white;
+    cursor: crosshair;
+    touch-action: none;
 }

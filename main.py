@@ -27,5 +27,13 @@ def home():
 
     return render_template("home.html")
 
+@app.route('/editor')
+def editor():
+    # CONNECT TO DATABASE
+    db = sqlite3.connect('main.db')
+    cursor = db.cursor()
+
+    return render_template("editor/editor.html")
+
 if __name__ == "__main__":
     app.run(debug = True)

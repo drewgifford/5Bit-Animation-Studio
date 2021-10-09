@@ -1,0 +1,36 @@
+{% extends "partial/base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3>Editor</h3>
+
+        <div class="toolbar">
+
+            <span class="item">
+                Pencil
+            </span>
+            <span class="item">
+                Eraser
+            </span>
+            <span class="item">
+                Eraser
+            </span>
+
+        </div>
+
+        <canvas id="board">
+
+        </canvas>
+
+
+    </div>
+
+{% endblock %}
+
+{% block customscripts %}
+
+<script src="/static/js/editor.js"></script>
+
+
+{% endblock %}
