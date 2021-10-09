@@ -1,0 +1,35 @@
+@font-face {
+    font-family: 'dos';
+    src: url('/static/font/perfect_dos_vga_437_win-webfont.woff2') format('woff2'),
+         url('/static/font/perfect_dos_vga_437_win-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+* {
+    font-family: "dos", monospace !important;
+    color: white;
+}
+
+a {
+    color: white;
+}
+a:not(.disabled):hover {
+    color: white;
+    text-decoration: underline !important;
+}
+a.disabled:hover {
+    cursor: default;
+    text-decoration: none;
+}
+
+.nav-link {
+    font-size: 16px;
+}
+
+body {
+    background: #111111;
+}
+
+.nav-item {
+    height: 100%;
+}
