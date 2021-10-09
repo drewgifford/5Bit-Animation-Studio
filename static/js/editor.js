@@ -26,6 +26,8 @@ var colors = [
     [255, 255, 255] // white
 ]
 
+var columnSize = 8;
+
 var tools = [true, false, false, false, false, false]
 
 class Canvas {
@@ -318,6 +320,7 @@ $(".tools .item").click(function(){
         }
         if (toolId == 5){
             board.clear();
+            board.newStep();
         }
         return;
     }
@@ -328,5 +331,40 @@ $(".tools .item").click(function(){
 
     $(".tools .item").removeClass("active");
     $(this).addClass("active");
+
+});
+
+document.onkeydown = checkForKeyboardShortcuts;
+
+function checkForKeyboardShortcuts(e){
+    var evtObj = window.event ? event : e;
+    if (evtObj.keyCode == 90 && evtObj.ctrlKey) {
+
+        if (evtObj.shiftKey) {
+            board.redo();
+        } else {
+            board.undo();
+        }
+
+    }
+}
+
+colors.forEach(color => {
+    var id = colors.indexOf(color);
+
+    var colorString = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+    $("#colors").append(`<div class='color' id='color-${id}'></div>`);
+
+    var elem = $(`#color-${id}`);
+    elem.css("background-color", colorString);
+
+    if(id >= columnSize){
+        elem.addClass('color-right')
+    }
+    color.push(255);
+    
+    elem.on("click", function(e){
+        board.setColor(color);
+    });
 
 });
