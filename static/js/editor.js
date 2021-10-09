@@ -60,13 +60,17 @@ class Canvas {
         this.setColor([255,255,0,255]);
 
         // Initialize data arrays
-        this.resetData();
+        this.data = this.createNewData();
 
         this.steps = [];
         this.redo_arr = [];
         this.frames = [];
 
         this.newStep();
+
+        // Frame configuration
+        this.frames = [this.data];
+        this.currentFrame = 0;
 
 
         // EVENT LISTENERS
@@ -129,6 +133,22 @@ class Canvas {
 
     }
 
+    addFrame(prevIndex){
+
+        var newData = [];
+        if(this.frames.length > 1){
+            newData = this.frames[prevIndex];
+        }
+
+        if(prevIndex == this.frames.length - 1){
+            // add
+            this.frames.append(newData);
+        } else {
+            this.frames = this.frames.splice(prevIndex + 1, 0, newData);
+        }
+
+    }
+
     newStep(){
         var newStep = [];
 
@@ -141,16 +161,18 @@ class Canvas {
         this.steps.push(newStep);
     }
 
-    resetData(){
-        this.data = [];
+    createNewData(){
+        var data = [];
 
         for(var x = 0; x < this.width; x++){
-            this.data[x] = [];
+            data[x] = [];
 
             for(var y = 0; y < this.height; y++){
-                this.data[x][y] = [0,0,0,255];
+                data[x][y] = [0,0,0,255];
             }
         }
+
+        return data;
     }
 
     undo(){
@@ -272,7 +294,7 @@ class Canvas {
     clear(){
         this.ctx.fillStyle = "black";
         this.ctx.fillRect(0, 0, this.w, this.h);
-        this.resetData();
+        this.data = this.createNewData();
 
         this.setColor(this.color);
     }

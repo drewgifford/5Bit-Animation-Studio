@@ -65,18 +65,20 @@ body {
     background-color: transparent;
     border-radius: 0px !important;
     transition: none;
+    margin-top: 10px;
 }
 .btn.btn-primary {
     border: 2px solid white;
+    color: white !important;
 }
 .btn.btn-primary:hover {
     background: white;
-    color: black;
+    color: black !important;
 }
 .btn.btn-danger {
     background: #ff0000;
     border: 2px solid #ff0000;
-    color: black;
+    color: black !important;
 }
 .btn.btn-danger:hover {
     background: #ff0000;
