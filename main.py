@@ -19,7 +19,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 
 crypto_key = os.getenv("CRYPTO_KEY")
-cipher_suite = Fernet(crypto_key)
+cipher_suite = Fernet(bytes(crypto_key, encoding='utf8'))
 
 @app.route('/')
 async def home():
