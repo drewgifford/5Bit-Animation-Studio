@@ -26,7 +26,7 @@ var colors = [
     [255, 255, 255] // white
 ]
 
-var tools = [false, false, true, false, false, false]
+var tools = [false, false, true, true, false, false]
 
 class Canvas {
 
@@ -45,6 +45,7 @@ class Canvas {
         this.canvas.style.height = Math.floor((height / width) * this.canvas.clientWidth) + "px";
 
         this.ctx = this.canvas.getContext("2d");
+        this.ctx.imageSmoothingEnabled = false;
 
         this.ctx.fillStyle = "black";
 
@@ -52,8 +53,18 @@ class Canvas {
 
         this.ctx.fillRect(0,0, this.w, this.h);
 
+        this.color = [255,255,255];
+
         // Initialize data arrays
-        this.data = [...Array(this.width)].map(e => Array(this.height).fill([0,0,0]));
+        this.data = [];
+
+        for(var x = 0; x < this.width; x++){
+            this.data[x] = [];
+
+            for(var y = 0; y < this.height; y++){
+                this.data[x][y] = [0,0,0];
+            }
+        }
 
         this.steps = [];
         this.redo_arr = [];
@@ -73,8 +84,8 @@ class Canvas {
 
 
             if (tools[Tool.fill]){
-
-                filler(x, y, this.data[x][y]);
+                console.log("INITIAL COLOR", this.data[x][y]);
+                filler(x, y, this.data[x][y], 0);
 
             }
 
@@ -85,6 +96,30 @@ class Canvas {
 
     }
 
+    draw(x, y, count){
+
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height){
+
+            this.data[x][y] = this.color;
+
+            this.ctx.fillRect(
+                Math.floor(x * (this.w / this.width)),
+                Math.floor(y * (this.h / this.height)),
+                Math.floor(this.w / this.width),
+                Math.floor(this.h / this.height)
+            );
+
+            if (
+
+                !count && JSON.stringify(this.steps[this.steps.length-1]) != 
+                JSON.stringify([x,y,this.color,this.ctx.globalAlpha])
+
+            ) this.steps.push([x,y,this.color,this.ctx.globalAlpha]);
+
+        }
+
+    }
+
 
 }
 
@@ -92,16 +127,28 @@ class Canvas {
 
 var board = new Canvas(16, 16);
 
-function filler(x, y, cc){
-    if (x >= 0 && board.width && y >= 0 && y <= board.height){
+function filler(x, y, currentColor, debug){
 
-        if(JSON.stringify(board.data[x][y]) == JSON.stringify(cc) && JSON.stringify(board.data[x][y]) != JSON.stringify(board.color)){
+    if (x >= 0 && x <= board.width && y >= 0 && y <= board.height){
+
+        
+        //console.log(board.data[x, y]);
+        //console.log("CURRENT COLOR", currentColor);
+
+        if(board.data[x][y] == currentColor){
+            board.ctx.fillStyle = "#ffffff";
+            board.color = [255, 255, 255];
             board.draw(x, y);
 
-            filler(x + 1, y, cc);
-            filler(x, y + 1, cc);
-            filler(x - 1, y, cc);
-            filler(x, y - 1, cc);
+            if(debug > 2){
+                return;
+            }
+            console.log("test")
+
+            filler(x + 1, y, currentColor, debug+1);
+            filler(x, y + 1, currentColor, debug+1);
+            filler(x - 1, y, currentColor, debug+1);
+            filler(x, y - 1, currentColor, debug+1);
         }
 
     }

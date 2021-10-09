@@ -122,4 +122,8 @@ body {
     background: white;
     cursor: crosshair;
     touch-action: none;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
