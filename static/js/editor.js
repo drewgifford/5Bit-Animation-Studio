@@ -359,12 +359,19 @@ colors.forEach(color => {
     elem.css("background-color", colorString);
 
     if(id >= columnSize){
-        elem.addClass('color-right')
+        elem.addClass('color-right');
     }
     color.push(255);
-    
+
     elem.on("click", function(e){
         board.setColor(color);
+        $("#colors .color").removeClass("active");
+        elem.addClass("active");
     });
 
 });
+
+//Default configuration
+
+$("#color-15").addClass("active");
+board.setColor([255,255,255,255]);
