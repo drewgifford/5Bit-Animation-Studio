@@ -5,21 +5,45 @@
     <div class="container">
         <h3>Editor</h3>
 
-        <div class="toolbar">
+        <div class="row">
+            <div class="col-md-1">
 
-            <span class="item">
-                Pencil
-            </span>
-            <span class="item">
-                Eraser
-            </span>
-            <span class="item">
-                Eraser
-            </span>
+                <div class="tools">
 
-        </div>
+                    <div class="item" id="tool-0">
+                        <img class="pixel-icon" src="/static/img/icon_pencil.png">
+                    </div>
 
-        <canvas id="board">
+                    <div class="item" id="tool-1">
+                        <img class="pixel-icon" src="/static/img/icon_eraser.png">
+                    </div>
+
+                    <div class="item" id="tool-2">
+                        <img class="pixel-icon" src="/static/img/icon_paint.png">
+                    </div>
+
+                    <div class="item" id="tool-3">
+                        <img class="pixel-icon" src="/static/img/icon_undo.png">
+                    </div>
+
+                    <div class="item" id="tool-4">
+                        <img class="pixel-icon" src="/static/img/icon_redo.png">
+                    </div>
+
+                    <div class="item" id="tool-5">
+                        <img class="pixel-icon" src="/static/img/icon_x.png">
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-9">
+                <canvas id="board">
+            </div>
+            <div class="col-md-3">
+
+            </div>
+        
 
         </canvas>
 

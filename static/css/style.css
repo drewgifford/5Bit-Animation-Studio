@@ -16,6 +16,17 @@
 h1,h2,h3,h4,h5 {
     color: white
 }
+
+*:not(p):not(h1):not(h2):not(h3):not(h4):not(h5) {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 .main {
     width: calc(100% - 10px);
     min-height: calc(100vh - 10px);
@@ -115,6 +126,49 @@ body {
 }
 .navy {
     color: #000080;
+}
+
+.tools {
+    display: block;
+    height: 100%;
+}
+.item {
+    display: block;
+    width: 50px;
+    height: 50px;
+    border: 2px solid white;
+}
+.tools .item {
+    cursor: pointer;
+}
+.tools .item.active {
+    background: white;
+}
+.tools .item.active img {
+    filter: brightness(0);
+}
+.item:not(:first-of-type) {
+    margin-top: -1px;
+    border-top: 1px solid white;
+}
+
+img.pixel-icon {
+    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+
+    width: 32px;
+    margin: auto;
+    text-align: center;
+    display: block;
+    margin-top: 50%;
+    transform: translateY(-50%);
+    
+
 }
 
 #board {

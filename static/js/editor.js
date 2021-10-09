@@ -1,10 +1,10 @@
 var Tool = {
     "pencil": 0,
     "eraser": 1,
-    "fill": 3,
-    "undo": 4,
-    "redo": 5,
-    "clear": 6
+    "fill": 2,
+    "undo": 3,
+    "redo": 4,
+    "clear": 5
 }
 
 var colors = [
@@ -26,7 +26,7 @@ var colors = [
     [255, 255, 255] // white
 ]
 
-var tools = [false, false, true, true, false, false]
+var tools = [true, false, false, false, false, false]
 
 class Canvas {
 
@@ -53,18 +53,12 @@ class Canvas {
 
         this.ctx.fillRect(0,0, this.w, this.h);
 
-        this.color = [255,255,255];
+        this.color = [0,0,0,255];
+
+        this.setColor([255,255,0,255]);
 
         // Initialize data arrays
-        this.data = [];
-
-        for(var x = 0; x < this.width; x++){
-            this.data[x] = [];
-
-            for(var y = 0; y < this.height; y++){
-                this.data[x][y] = [0,0,0];
-            }
-        }
+        this.resetData();
 
         this.steps = [];
         this.redo_arr = [];
@@ -88,12 +82,69 @@ class Canvas {
                 filler(x, y, this.data[x][y], 0);
 
             }
+            else if(tools[Tool.pencil]){
+                this.draw(x,y);
+            }
+            else if(tools[Tool.eraser]){
+                this.erase(x,y);
+            }
 
 
 
-        })
+        });
+
+        // Check if mouse cursor is down
+        this.active = false;
+
+        this.canvas.addEventListener("mousedown", e => {
+            this.active = true;
+        });
+        document.addEventListener("mouseup", e => {
+            this.active = false;
+        });
+
+        // Check for mouse dragging
+
+        this.canvas.addEventListener("mousemove", e => {
+            this.dragDraw(e);
+        });
+        this.canvas.addEventListener("touchmove", e => {
+            this.dragDraw(e);
+        });
 
 
+
+    }
+
+    resetData(){
+        this.data = [];
+
+        for(var x = 0; x < this.width; x++){
+            this.data[x] = [];
+
+            for(var y = 0; y < this.height; y++){
+                this.data[x][y] = [0,0,0,255];
+            }
+        }
+    }
+
+    dragDraw(e){
+        if(this.active){
+
+            var rect = this.canvas.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = e.clientY - rect.top;
+            x = Math.floor(this.width * x / this.canvas.clientWidth);
+            y = Math.floor(this.height * y / this.canvas.clientHeight);
+
+            if(tools[Tool.pencil]){
+                this.draw(x, y);
+            }
+            else if (tools[Tool.eraser]){
+                this.erase(x,y);
+            }
+
+        }
     }
 
     draw(x, y, count){
@@ -111,8 +162,8 @@ class Canvas {
 
             if (
 
-                !count && JSON.stringify(this.steps[this.steps.length-1]) != 
-                JSON.stringify([x,y,this.color,this.ctx.globalAlpha])
+                !count && JSON.pruned(this.steps[this.steps.length-1]) != 
+                JSON.pruned([x,y,this.color,this.ctx.globalAlpha])
 
             ) this.steps.push([x,y,this.color,this.ctx.globalAlpha]);
 
@@ -120,30 +171,49 @@ class Canvas {
 
     }
 
+    erase(x, y){
+        var temp = this.color;
+        var tga = this.ctx.globalAlpha;
+        this.setColor([0,0,0,255]);
+        this.draw(x, y);
+        this.setColor(temp);
+        this.ctx.globalAlpha = tga;
+    }
+
+    setColor(color){
+        this.ctx.globalAlpha = 1;
+        this.color = color;
+        this.ctx.fillStyle = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + color[3] + ")";
+    }
+
+    setTool(i){
+        tools = [false, false, false, false, false, false];
+        tools[i] = true;
+        //TODO: update UI
+    }
+
+    clear(){
+        this.ctx.fillStyle = "black";
+        this.ctx.fillRect(0, 0, this.w, this.h);
+        this.resetData();
+
+        this.setColor(this.color);
+    }
+
 
 }
 
 
 
-var board = new Canvas(16, 16);
+var board = new Canvas(32, 32);
 
 function filler(x, y, currentColor, debug){
 
-    if (x >= 0 && x <= board.width && y >= 0 && y <= board.height){
+    if (x >= 0 && x < board.width && y >= 0 && y < board.height){
 
-        
-        //console.log(board.data[x, y]);
-        //console.log("CURRENT COLOR", currentColor);
-
-        if(board.data[x][y] == currentColor){
-            board.ctx.fillStyle = "#ffffff";
-            board.color = [255, 255, 255];
+        if(arraysEqual(board.data[x][y], currentColor)){
             board.draw(x, y);
 
-            if(debug > 2){
-                return;
-            }
-            console.log("test")
 
             filler(x + 1, y, currentColor, debug+1);
             filler(x, y + 1, currentColor, debug+1);
@@ -153,3 +223,35 @@ function filler(x, y, currentColor, debug){
 
     }
 }
+
+function arraysEqual(a1,a2) {
+    /* WARNING: arrays must not contain {objects} or behavior may be undefined */
+    return JSON.stringify(a1)==JSON.stringify(a2);
+}
+
+$(".tools .item").click(function(){
+
+    var id = $(this).attr("id");
+    var toolId = parseInt(id.split("-")[1]);
+
+    if(toolId > 2){
+        if (toolId == 3){
+            
+        }
+        if (toolId == 4){
+
+        }
+        if (toolId == 5){
+            board.clear();
+        }
+        return;
+    }
+
+    
+
+    board.setTool(parseInt(toolId));
+
+    $(".tools .item").removeClass("active");
+    $(this).addClass("active");
+
+});
