@@ -54,5 +54,29 @@ async def editor():
 #             return redirect(url_for())
 #         return render_template()
 
+# @app.route('/signup')
+# async def signup():
+#     if request.method == 'POST':
+#         email = request.form['']
+#         password = request.form['']
+#         confirm_password = request.form['']
+#         username = request.form['']
+#         async with asqlite.connect("main.db") as conn:
+#             async with conn.cursor() as cursor:
+#                 await cursor.execute(f"SELECT * FROM accounts WHERE email = ?", email)
+#                 result = await cursor.fetchone()
+#                 if result is not None:
+#                     return render_template()
+#                 elif password == confirm_password:
+#                     ciphered_text = cipher_suite.encrypt(bytes(password, encoding='utf8'))
+#                     sql = ("INSERT INTO accounts(email, password, username) VALUES(?,?,?)")
+#                     val = (str(email), ciphered_text, str(username))
+#                     await cursor.execute(sql, val)
+#                     return render_template()
+#                 else:
+#                     return render_template()
+#     else:
+#         return render_template()
+
 if __name__ == "__main__":
     app.run(debug = True)
