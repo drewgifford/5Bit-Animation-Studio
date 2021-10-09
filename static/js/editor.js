@@ -64,6 +64,8 @@ class Canvas {
         this.redo_arr = [];
         this.frames = [];
 
+        this.newStep();
+
 
         // EVENT LISTENERS
         this.canvas.addEventListener("click", e => {
@@ -80,6 +82,8 @@ class Canvas {
             if (tools[Tool.fill]){
                 console.log("INITIAL COLOR", this.data[x][y]);
                 filler(x, y, this.data[x][y], 0);
+
+                this.newStep();
 
             }
             else if(tools[Tool.pencil]){
@@ -100,6 +104,13 @@ class Canvas {
             this.active = true;
         });
         document.addEventListener("mouseup", e => {
+
+            if(this.active){
+                if(tools[Tool.pencil] || tools[Tool.eraser]){
+                    this.newStep();
+                }
+            }
+
             this.active = false;
         });
 
@@ -116,6 +127,18 @@ class Canvas {
 
     }
 
+    newStep(){
+        var newStep = [];
+
+        for(var x = 0; x < this.width; x++){
+            newStep[x] = [];
+            for(var y = 0; y < this.height; y++){
+                newStep[x][y] = this.data[x][y];
+            }
+        }
+        this.steps.push(newStep);
+    }
+
     resetData(){
         this.data = [];
 
@@ -126,6 +149,65 @@ class Canvas {
                 this.data[x][y] = [0,0,0,255];
             }
         }
+    }
+
+    undo(){
+        if(this.steps.length <= 1){ return; }
+
+        var color = this.color;
+        var gph = this.globalAlpha;
+
+        // Clear the board
+        this.clear();
+
+        // 
+
+        var undoneStep = this.steps.pop();
+
+        this.redo_arr.push(undoneStep);
+
+        var step = this.steps[this.steps.length-1];
+
+        for(var x = 0; x < this.width; x++){
+            for(var y = 0; y < this.height; y++){
+                    
+                this.setColor(step[x][y]);
+                this.globalAlpha = step[x][y][3];
+                this.draw(x,y);
+
+            }
+        }
+
+        this.setColor(color);
+        this.globalAlpha = gph;
+    }
+
+    redo(){
+
+        if(this.redo_arr.length < 1){ return; }
+
+        var color = this.color;
+        var gph = this.globalAlpha;
+
+        // Clear the board
+        var redoneStep = this.redo_arr.pop();
+
+        this.steps.push(redoneStep);
+
+        var step = redoneStep;
+
+        for(var x = 0; x < this.width; x++){
+            for(var y = 0; y < this.height; y++){
+                    
+                this.setColor(step[x][y]);
+                this.globalAlpha = step[x][y][3];
+                this.draw(x,y);
+
+            }
+        }
+
+        this.setColor(color);
+        this.globalAlpha = gph;
     }
 
     dragDraw(e){
@@ -159,13 +241,6 @@ class Canvas {
                 Math.floor(this.w / this.width),
                 Math.floor(this.h / this.height)
             );
-
-            if (
-
-                !count && JSON.pruned(this.steps[this.steps.length-1]) != 
-                JSON.pruned([x,y,this.color,this.ctx.globalAlpha])
-
-            ) this.steps.push([x,y,this.color,this.ctx.globalAlpha]);
 
         }
 
@@ -236,10 +311,10 @@ $(".tools .item").click(function(){
 
     if(toolId > 2){
         if (toolId == 3){
-            
+            board.undo();
         }
         if (toolId == 4){
-
+            board.redo();
         }
         if (toolId == 5){
             board.clear();
