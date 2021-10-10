@@ -2,4 +2,8 @@
 __pycache__
 .git
 main.db
+main.db-shm
+main.db-wal
 *.db
+*.db-shm
+*.db-wal

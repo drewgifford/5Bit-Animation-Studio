@@ -58,7 +58,7 @@ async def login():
     else:
         if "user" in session:
             return redirect(url_for("home"))
-        return render_template("login.html")
+        return render_template("login.html", error=error)
 
 @app.route('/signup', methods=['GET', 'POST'])
 async def signup():
@@ -87,7 +87,7 @@ async def signup():
                     error["confirmPassword"] = 'Passwords must match.'
                     return render_template("signup.html", error=error)
     else:
-        return render_template("signup.html")
+        return render_template("signup.html", error=error)
 
 @app.route('/about')
 async def about():
