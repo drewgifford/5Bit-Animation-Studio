@@ -32,7 +32,7 @@ async def home():
 
     async with asqlite.connect("main.db") as conn:
         async with conn.cursor() as cursor:
-            await cursor.execute('SELECT art_id, title, author_id FROM arts')
+            await cursor.execute('SELECT art_id, title, author_id FROM arts ORDER BY art_id DESC')
             results = await cursor.fetchall()
             print(results)
 
@@ -60,6 +60,16 @@ async def home():
             else:
                 return render_template("home.html", user=user, arts=arts)
 
+@app.route('/delete/<art_id>', methods=['GET','POST'])
+def delete():
+    user = {}
+    if 'email' in session:
+        user['account_id'] = session['account_id']
+        user['email'] = session['email']
+        user['username'] = session['user']
+    else:
+        return redirect(url_for("login"))
+
 @app.route('/profile')
 async def profile():
     user = {}
@@ -70,7 +80,7 @@ async def profile():
         
         async with asqlite.connect("main.db") as conn:
             async with conn.cursor() as cursor:
-                await cursor.execute('SELECT art_id, title, author_id FROM arts WHERE author_id = ?', user['account_id'])
+                await cursor.execute('SELECT art_id, title, author_id FROM arts WHERE author_id = ? ORDER BY art_id DESC', user['account_id'])
                 results = await cursor.fetchall()
 
                 arts = []
@@ -106,77 +116,36 @@ async def editor(cloned_id=None):
     else:
         return redirect(url_for("login"))
 
-@app.route('/remix/<cloned_id>')
-async def remix(cloned_id=None):
-    user = {}
-    if 'email' in session:
-        user['account_id'] = session['account_id']
-        user['email'] = session['email']
-        user['username'] = session['user']
-        return render_template("editor/editor.html", user=user, cloned_id=cloned_id, remix=True)
-    else:
-        return redirect(url_for("login"))
-
 @app.route('/editor/submit', methods=['GET', 'POST'])
 async def submit():
     if 'email' in session:
         if request.method == 'POST':
             async with asqlite.connect("main.db") as conn:
                 async with conn.cursor() as cursor:
-
-                    
-
                     request_json = request.get_json()
-
-                    await cursor.execute("SELECT author_id FROM arts WHERE art_id = ?", request_json['id'])
-                    id = await cursor.fetchone()
-
-                    print("ID", id[0])
-
-                    if(id[0]):
-                        if(id[0] == session['account_id']):
-                            await cursor.execute("UPDATE arts SET title = ?, pixels = ?", bleach.clean(str(request_json['title'])), str(request_json['frames']))
-                            return f'/view/{int(request_json["id"])}'
 
 
                     print(request_json)
                     title = request_json['title']
-                    sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
-                    val = (bleach.clean(str(title)), int(session['account_id']), str(request_json['frames']))
+
+                    if(bleach.clean(str(title)) == ""):
+                        title = "Untitled Animation"
+
+                    sql = ("INSERT INTO arts(title, author_id, pixels, timing) VALUES(?,?,?,?)")
+                    val = (bleach.clean(str(title)), int(session['account_id']), str(request_json['frames']), int(request_json['timing']))
                     await cursor.execute(sql, val)
 
 
-                    await cursor.execute(f"SELECT art_id FROM arts WHERE pixels = ?", str(request_json['frames']))
-                    result = await cursor.fetchone()
+
+                    await cursor.execute(f"SELECT last_insert_rowid()")
+                    ident = (await cursor.fetchone())[0]
+
+                    print("CURRENT ID", ident)
                     
                     # GENERATE GIF
-                    await boardToImage(int(result[0]), request_json['frames'])
+                    await boardToImage(ident, request_json['frames'], int(request_json['timing']))
 
-                    return f'/view/{int(result[0])}'
-
-
-@app.route('/remix/submit', methods=['GET', 'POST'])
-async def remixSubmit():
-    if 'email' in session:
-        if request.method == 'POST':
-            async with asqlite.connect("main.db") as conn:
-                async with conn.cursor() as cursor:
-
-                    request_json = request.get_json()
-                    print(request_json)
-                    title = request_json['title']
-                    sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
-                    val = (bleach.clean(str(title)), int(session['account_id']), str(request_json['frames']))
-                    await cursor.execute(sql, val)
-
-
-                    await cursor.execute(f"SELECT art_id FROM arts WHERE pixels = ?", str(request_json['frames']))
-                    result = await cursor.fetchone()
-                    
-                    # GENERATE GIF
-                    await boardToImage(int(result[0]), request_json['frames'])
-
-                    return f'/view/{int(result[0])}'
+                    return f'/view/{ident}'
 
 
 @app.route('/about')
@@ -282,6 +251,7 @@ async def viewGet(art_id):
                 art['title'] = str(result[1])
                 art['author'] = str(author[0])
                 art['frames'] = result[3]
+                art['timing'] = result[4]
         return art
     else:
         async with asqlite.connect("main.db") as conn:
@@ -293,6 +263,7 @@ async def viewGet(art_id):
                 art['title'] = str(result[1])
                 art['author'] = str(author[0])
                 art['frames'] = result[3]
+                art['timing'] = result[4]
         return art
     
 
@@ -325,7 +296,7 @@ def closest_color(rgb):
     return min(color_diffs)[1]
 
 @app.route('/boardToImage', methods=['GET', 'POST'])
-async def boardToImage(id, obj):
+async def boardToImage(id, obj, timing):
     images = []
 
     width = 32
@@ -340,7 +311,7 @@ async def boardToImage(id, obj):
     images[0].save(f'./static/gif/{id}.gif',
         save_all = True,
         append_images = images[1:],
-        duration = 10,
+        duration = timing,
         loop = 0
     )
 

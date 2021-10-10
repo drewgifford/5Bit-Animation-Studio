@@ -48,6 +48,10 @@
                     <input class="frame" type="number" id="frame" name="frame" value=1 readonly>
                     <a id="increase" class="btn btn-primary">&gt;</a>
 
+
+                    <label for="timing" class="mt-3 mb-0">MS/frame</label>
+                    <input type="number" id="timing" name="timing" value=100 min=50 max=2000>
+
                     
 
                     <div class="form-check mt-2">
@@ -92,9 +96,8 @@
 <script src="/static/js/editor.js"></script>
 
 
-
-{% if cloned_id %}
-    <script>
+<script>
+    {% if cloned_id %}
         var id = {{ cloned_id }};
         // Set the data with the JSON
         $.ajax({
@@ -109,85 +112,22 @@
 
             }
         });
+    {% endif %}
 
-        $("#save").click(function(){
+    $("#save").click(function(){
             var obj = board.getJson();
 
-            obj.id = {{ cloned_id }}
-            {% if remix %}
-
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: '/remix/submit',
-                    data: JSON.stringify(obj),
-                    success: function(url){
-                        window.location.replace(url);
-                    }
-                });
-            {% else %}
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: '/editor/submit',
-                    data: JSON.stringify(obj),
-                    success: function(url){
-                        window.location.replace(url);
-                    }
-                });
-                
-            {% endif %}
-        });
-    </script>
-
-{% else %}
-    <script>
-        console.log('Test');
-        var id = {{ cloned_id }};
-        // This should be where you save the data if it's not a cloned one
-        $.ajax({
-            type: 'GET',
-            url: `/view/get/${id}`,
-            contentType: "application/json",
-            success: function(data){
-                data.frames = JSON.parse(data.frames);
-                console.log(data);
-                board.initialize(data);
-
-
-            }
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/editor/submit',
+                data: JSON.stringify(obj),
+                success: function(url){
+                    window.location.replace(url);
+                }
+            });
         });
 
-        $("#save").click(function(){
-            var obj = board.getJson();
-
-            obj.id = {{ cloned_id }}
-            {% if remix %}
-
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: '/remix/submit',
-                    data: JSON.stringify(obj),
-                    success: function(url){
-                        window.location.replace(url);
-                    }
-                });
-            {% else %}
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: '/editor/submit',
-                    data: JSON.stringify(obj),
-                    success: function(url){
-                        window.location.replace(url);
-                    }
-                });
-                
-            {% endif %}
-        });
-    </script>
-
-{% endif %}
+</script>
 
 {% endblock %}

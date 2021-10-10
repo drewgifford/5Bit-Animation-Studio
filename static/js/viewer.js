@@ -53,7 +53,7 @@ $("#play").click(function(){
     if(playTask == null){
         playTask = setInterval(function(){
             board.nextFrame();
-        }, 100);
+        }, timing);
     }
 });
 $("#pause").click(function(){

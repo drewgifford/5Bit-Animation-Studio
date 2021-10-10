@@ -148,11 +148,15 @@ $("#showOverlay").change(function(){
 
 var playTask = null;
 
+$("#timing").change(function(){
+    timing = $(this).val();
+});
+
 $("#play").click(function(){
     if(playTask == null){
         playTask = setInterval(function(){
             board.nextFrame();
-        }, 100);
+        }, timing);
     }
 });
 $("#pause").click(function(){

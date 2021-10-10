@@ -1,3 +1,5 @@
+var timing = 100;
+
 class Canvas {
 
     constructor(width, height, overlayBoard){
@@ -135,7 +137,8 @@ class Canvas {
         var obj = {
             title: $('#title').val(),
             //author: this.author,
-            frames: this.frames
+            frames: this.frames,
+            timing: $("#timing").val()
         }
         return obj;
     }
@@ -158,6 +161,9 @@ class Canvas {
 
         this.data = frames;
         this.setFrame(0);
+
+        console.log(data)
+        timing = data.timing;
 
         $("#title").val(data.title);
 

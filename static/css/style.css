@@ -291,3 +291,10 @@ input[type="text"],input[type="email"],input[type="password"] {
     margin: auto;
     margin-top: 15px;
 }
+#timing {
+    background: transparent;
+    width: 80%;
+    margin-bottom: 5px;
+    border: none;
+    font-size: 16px;
+}
