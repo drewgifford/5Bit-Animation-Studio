@@ -33,12 +33,15 @@ async def home():
 
 @app.route('/editor')
 async def editor():
-
-    return render_template("editor/editor.html")
+    user = {}
+    
+    return render_template("editor/editor.html", user=user)
 
 @app.route('/about')
 async def about():
-    return render_template('about.html')
+    user = {}
+
+    return render_template('about.html', user=user)
 
 ### Account Routing ###
 
@@ -113,8 +116,10 @@ async def logout():
 async def boardToImage():
 
     if request.method == 'POST':
-        obj = request.json['data']
+        obj = request.form
         print(obj)
+
+    return "hello world"
         
 
 

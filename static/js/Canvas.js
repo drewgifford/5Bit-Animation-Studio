@@ -385,6 +385,12 @@ class Canvas {
 
     convertToGif(){
         
+        $.ajax({
+            type: 'POST',
+            url: '/boardToImage',
+            data: JSON.stringify(this.frames)
+        });
+
     }
 
 
