@@ -54,7 +54,6 @@ async def submit():
         if request.method == 'POST':
             async with asqlite.connect("main.db") as conn:
                 async with conn.cursor() as cursor:
-                    result = await cursor.execute("SELECT * FROM accounts WHERE email = ?", session['email'])
                     request_json = json.loads(json.dumps(request.json))
                     title = request.form['title']
                     sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
@@ -140,17 +139,6 @@ async def logout():
     return redirect(url_for("login"))
 
 
-@app.route('/view')
-async def view():
-    user = {}
-    return render_template('view.html', user=user)
-
-@app.route('/view/get', methods=['GET'])
-async def view():
-    user = {}
-
-    return "put a json object here"
-    # Return json object
 
 
 # This function ensures that the colors people select MUST be one of the 16 predefined colors. No hacking
