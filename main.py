@@ -14,6 +14,7 @@ import email.message
 import datetime
 import json
 import glob
+import math
 from PIL import Image
 
 app = Flask(__name__)
@@ -114,12 +115,62 @@ async def logout():
 
 
 
+# This function ensures that the colors people select MUST be one of the 16 predefined colors. No hacking
+COLORS = (
+    (0,0,0),
+    (0,0,170),
+    (0,170,0),
+    (0,170,170),
+    (170,0,0),
+    (170,85,0),
+    (170,170,170),
+    (85,85,85),
+    (85,85,255),
+    (85,255,85),
+    (85,255,255),
+    (255,85,85),
+    (255,85,255),
+    (255,255,85),
+    (255,255,255)
+)
+def closest_color(rgb):
+    r, g, b = rgb
+    color_diffs = []
+    for color in COLORS:
+        cr, cg, cb = color
+        color_diff = math.sqrt(abs(r - cr)**2 + abs(g - cg)**2 + abs(b - cb)**2)
+        color_diffs.append((color_diff, color))
+    return min(color_diffs)[1]
+
 @app.route('/boardToImage', methods=['GET', 'POST'])
 async def boardToImage():
 
     if request.method == 'POST':
         obj = request.get_json()
         print(obj)
+
+        images = []
+
+        width = 32
+
+        for i in range(len(obj)):
+            im = Image.new('RGB', (width, width), (0,0,0))
+            for x in range(32):
+                for y in range(32):
+                    im.putpixel((x,y), closest_color((obj[i][x][y][0], obj[i][x][y][1], obj[i][x][y][2])))
+            images.append(im)
+
+        print(images)
+
+    id = 0
+
+    images[0].save(f'./static/gif/{id}.gif',
+        save_all = True,
+        append_images = images[1:],
+        optimize = False,
+        duration = 10,
+        loop = 0
+    )
 
     return "hello world"
         
