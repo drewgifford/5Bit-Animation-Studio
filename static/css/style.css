@@ -81,8 +81,17 @@ body {
     color: black !important;
 }
 .btn.btn-danger:hover {
-    background: #ff0000;
-    color: white;
+    background: transparent;
+    color: #ff0000 !important;
+}  
+.btn.btn-success {
+    background: #00ff00;
+    border: 2px solid #00ff00;
+    color: black !important;
+}
+.btn.btn-success:hover {
+    background: transparent;
+    color: #00ff00 !important;
 }  
 .cyan {
     color: #00ffff;
@@ -166,9 +175,11 @@ body {
     grid-template-columns: 50px 50px;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-auto-flow: column;
-    width: 103px;
+    width: 104px;
     height: 397px;
     border: 2px solid white;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 .color.active {
     border-width: 6px;
@@ -195,10 +206,28 @@ img.pixel-icon {
     
 
 }
-
-#board {
+input[name="frame"] {
+    width: 2em;
+    -moz-appearance: textfield;
+    background: transparent;
+    color: white;
+    outline: none;
+    border: none;
+    font-size: 22px;
+    text-align: center;
+}
+input[name="frame"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+.boards {
     width: 100%;
-    background: white;
+    position: relative;
+}
+#board, #overlayBoard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     cursor: crosshair;
     touch-action: none;
     image-rendering: -moz-crisp-edges;
@@ -206,4 +235,22 @@ img.pixel-icon {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     border: 2px solid white;
+}
+#overlayBoard {
+    pointer-events: none;
+    filter: opacity(0.1);
+}
+
+.play-controls {
+    margin-right: 0;
+}
+.play-controls a {
+    width: 40px;
+    height: 40px;
+    margin-top: 0;
+}
+.play-controls .pixel-icon {
+    width: 24px;
+    display: block;
+    transform: translate(-23%, -29%);
 }

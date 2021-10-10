@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container">
-        <h3>Editor</h3>
+        <h1>Untitled Project</h1>
 
         <div class="row">
             <div class="col-md-2">
@@ -33,16 +33,43 @@
                     <div class="item" id="tool-5">
                         <img class="pixel-icon" src="/static/img/icon_x.png">
                     </div>
+                    <br>
+                    <h5>Frame Controls</h5>
 
-                    <a class="btn btn-primary">New Frame</a>
-                    <a class="btn btn-primary">Insert Frame</a>
-                    <a class="btn btn-danger">Delete Frame</a>
+                    <div class="play-controls">
+
+                        <a class="btn btn-primary" id="play"><img class="pixel-icon" src="/static/img/icon_play.png"></a>
+                        <a class="btn btn-primary" id="pause"><img class="pixel-icon" src="/static/img/icon_pause.png"></a>
+                        <a class="btn btn-danger" id="stop"><img class="pixel-icon" src="/static/img/icon_stop.png"></a>
+    
+                    </div>
+
+                    <a id="decrease" class="btn btn-primary">&lt;</a>
+                    <input class="frame" type="number" id="frame" name="frame" value=1 readonly>
+                    <a id="increase" class="btn btn-primary">&gt;</a>
+
+                    
+
+                    <div class="form-check mt-2">
+                        <input type="checkbox" class="form-check-input" id="showOverlay" name="showOverlay" checked>
+                        <label class="form-check-label" for="showOverlay">Show Overlay</label>
+                    </div>
+
+                    <a id="newFrame" class="btn btn-primary">New Frame</a>
+                    <a id="deleteFrame" class="btn btn-danger">Delete Frame</a>
+                    
+                    <a id="save" class="mt-4 btn btn-success">Save Animation</a>
 
                 </div>
 
             </div>
             <div class="col-md-8">
-                <canvas id="board">
+                
+                <div class="boards">
+                    <canvas id="board"></canvas>
+                    <canvas id="overlayBoard"></canvas>
+                    
+                </div>
             </div>
             <div class="col-md-2">
                 <div id="colors">
@@ -60,6 +87,8 @@
 
 {% block customscripts %}
 
+<script src="/static/js/Canvas.js"></script>
+<script src="/static/js/OverlayCanvas.js"></script>
 <script src="/static/js/editor.js"></script>
 
 
