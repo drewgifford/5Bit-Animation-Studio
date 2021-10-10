@@ -177,5 +177,10 @@ $("#save").click(function(){
         frames: JSON.stringify(board.getJson()),
         title: $("#title").val()
     }
-    $.post("/editor/submit", obj)
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: '/editor/submit',
+        data: JSON.stringify(obj)
+    });
 });
