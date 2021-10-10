@@ -144,9 +144,16 @@ class Canvas {
 
         var frames = data.frames;
 
-        for(var frame in frames){
-            if(frame == 0) continue;
-            this.addFrame(frame-1);
+        for(var x = 0; x < frames.length; x++){
+            if(x != 0) {
+                this.addFrame(x-1);
+            }
+            this.setFrame(x);
+            this.setData(frames[x]);
+            
+            if(x != 0){
+                this.newStep();
+            }
         }
 
         this.data = frames;

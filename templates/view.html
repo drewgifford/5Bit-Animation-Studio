@@ -28,7 +28,7 @@
                 
                 <div class="boards">
                     <canvas id="board"></canvas>
-                    <canvas id="overlayBoard"></canvas>
+                    <canvas style='display: none !important' id="overlayBoard"></canvas>
                 </div>
             </div>
             <div class="col-md-2">
@@ -49,15 +49,18 @@
 <script src="/static/js/viewer.js"></script>
 
 <script>
-
+    var id = {{ art_id }};
     // Set the data with the JSON
-    var data = $.ajax({
+    $.ajax({
         type: 'GET',
-        url: '/view/get/',
-        data: JSON.stringify({id: 0}),
+        url: `/view/get/${id}`,
         contentType: "application/json",
-        success: function(){
-            //board.initialize(data)
+        success: function(data){
+            data.frames = JSON.parse(data.frames);
+            console.log(data);
+            board.initialize(data);
+
+
         }
     })
 

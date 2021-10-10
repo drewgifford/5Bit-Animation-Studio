@@ -91,5 +91,26 @@
 <script src="/static/js/OverlayCanvas.js"></script>
 <script src="/static/js/editor.js"></script>
 
+<script>
+
+    {% if art_id %}
+        var id = {{ art_id }};
+        // Set the data with the JSON
+        $.ajax({
+            type: 'GET',
+            url: `/view/get/${id}`,
+            contentType: "application/json",
+            success: function(data){
+                data.frames = JSON.parse(data.frames);
+                console.log(data);
+                board.initialize(data);
+
+
+            }
+        })
+    {% endif %}
+
+
+</script>
 
 {% endblock %}

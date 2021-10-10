@@ -1,3 +1,12 @@
+var Tool = {
+    "pencil": 0,
+    "eraser": 1,
+    "fill": 2,
+    "undo": 3,
+    "redo": 4,
+    "clear": 5
+}
+
 var columnSize = 8;
 
 var tools = [false, false, false, false, false, false]
