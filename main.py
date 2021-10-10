@@ -61,14 +61,23 @@ async def home():
                 return render_template("home.html", user=user, arts=arts)
 
 @app.route('/delete/<art_id>', methods=['GET','POST'])
-def delete():
+async def delete(art_id):
     user = {}
     if 'email' in session:
         user['account_id'] = session['account_id']
         user['email'] = session['email']
         user['username'] = session['user']
+        async with asqlite.connect("main.db") as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute('SELECT * FROM arts WHERE author_id = ? and art_id = ?', user['account_id'], int(art_id))
+                result = await cursor.fetchone()
+                if int(session['account_id']) == int(result[2]):
+                    await cursor.execute('DELETE FROM art WHERE art_id = ?', int(art_id))
+                    return redirect(url_for("profile"))
+                else:
+                    return redirect(url_for("profile"))
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("profile"))
 
 @app.route('/profile')
 async def profile():
