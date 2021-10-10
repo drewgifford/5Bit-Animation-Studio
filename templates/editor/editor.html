@@ -94,51 +94,100 @@
 
 
 {% if cloned_id %}
-<script>
-    var id = {{ cloned_id }};
-    // Set the data with the JSON
-    $.ajax({
-        type: 'GET',
-        url: `/view/get/${id}`,
-        contentType: "application/json",
-        success: function(data){
-            data.frames = JSON.parse(data.frames);
-            console.log(data);
-            board.initialize(data);
+    <script>
+        var id = {{ cloned_id }};
+        // Set the data with the JSON
+        $.ajax({
+            type: 'GET',
+            url: `/view/get/${id}`,
+            contentType: "application/json",
+            success: function(data){
+                data.frames = JSON.parse(data.frames);
+                console.log(data);
+                board.initialize(data);
 
 
-        }
-    });
+            }
+        });
 
-    $("#save").click(function(){
-        var obj = board.getJson();
+        $("#save").click(function(){
+            var obj = board.getJson();
 
-        obj.id = {{ cloned_id }}
-        {% if remix %}
+            obj.id = {{ cloned_id }}
+            {% if remix %}
 
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: '/remix/submit',
-                data: JSON.stringify(obj),
-                success: function(url){
-                    window.location.replace(url);
-                }
-            });
-        {% else %}
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/json',
-                url: '/editor/submit',
-                data: JSON.stringify(obj),
-                success: function(url){
-                    window.location.replace(url);
-                }
-            });
-            
-        {% endif %}
-    });
-</script>
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: '/remix/submit',
+                    data: JSON.stringify(obj),
+                    success: function(url){
+                        window.location.replace(url);
+                    }
+                });
+            {% else %}
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: '/editor/submit',
+                    data: JSON.stringify(obj),
+                    success: function(url){
+                        window.location.replace(url);
+                    }
+                });
+                
+            {% endif %}
+        });
+    </script>
+
+{% else %}
+    <script>
+        console.log('Test');
+        var id = {{ cloned_id }};
+        // This should be where you save the data if it's not a cloned one
+        $.ajax({
+            type: 'GET',
+            url: `/view/get/${id}`,
+            contentType: "application/json",
+            success: function(data){
+                data.frames = JSON.parse(data.frames);
+                console.log(data);
+                board.initialize(data);
+
+
+            }
+        });
+
+        $("#save").click(function(){
+            var obj = board.getJson();
+
+            obj.id = {{ cloned_id }}
+            {% if remix %}
+
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: '/remix/submit',
+                    data: JSON.stringify(obj),
+                    success: function(url){
+                        window.location.replace(url);
+                    }
+                });
+            {% else %}
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    url: '/editor/submit',
+                    data: JSON.stringify(obj),
+                    success: function(url){
+                        window.location.replace(url);
+                    }
+                });
+                
+            {% endif %}
+        });
+    </script>
+
 {% endif %}
 
 {% endblock %}
