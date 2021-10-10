@@ -1,0 +1,70 @@
+{% extends "partial/base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form class="form" method="post">
+
+            <div class="form-group row">
+
+                <label class="col-md-3" for="email">Email Address</label>
+
+                <div class="col-md-9">
+                    <input type="email" name="email" id="email">
+                    {% if 'email' in error %}
+                        <p class="red">{{ error['email'] }}</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3" for="username">Username</label>
+
+                <div class="col-md-9">
+                    <input type="text" name="username" id="username">
+                    {% if 'username' in error %}
+                        <p class="red">{{ error['username'] }}</p>
+                    {% endif %}
+                </div>
+                
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3" for="password">Password</label>
+
+                <div class="col-md-9">
+                    <input type="password" name="password" id="password">
+
+                    {% if 'password' in error %}
+                        <span class="red">{{ error['password'] }}</span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-3" for="confirmPassword">Confirm Password</label>
+
+                <div class="col-md-9">
+                    <input type="password" name="confirmPassword" id="confirmPassword">
+                    {% if 'confirmPassword' in error %}
+                        <p class="red">{{ error['confirmPassword'] }}</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <input type="submit" class="btn btn-success" value="Sign Up">
+
+
+
+        </form>
+
+    </div>
+
+
+{% endblock %}

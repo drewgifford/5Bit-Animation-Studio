@@ -254,3 +254,13 @@ input[name="frame"]::-webkit-inner-spin-button {
     display: block;
     transform: translate(-23%, -29%);
 }
+input[type="text"],input[type="email"],input[type="password"] {
+    color: black;
+}
+.form {
+    max-width: 600px;
+}
+.form input {
+    width: 100%;
+    display: block;
+}
