@@ -29,16 +29,38 @@ cipher_suite = Fernet(crypto_key)
 async def home():
     user = {}
     if 'email' in session:
+        user['account_id'] = session['account_id']
         user['email'] = session['email']
+        user['username'] = session['user']
         return render_template("home.html", user=user)
     else:
         return render_template("home.html", user=user)
 
-@app.route('/editor')
+@app.route('/editor', methods=['GET', 'POST'])
 async def editor():
     user = {}
     
-    return render_template("editor/editor.html", user=user)
+    if 'email' in session:
+        user['account_id'] = session['account_id']
+        user['email'] = session['email']
+        user['username'] = session['user']
+        return render_template("editor/editor.html", user=user)
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/editor/submit', methods=['GET', 'POST'])
+async def submit():
+    if 'email' in session:
+        if request.method == 'POST':
+            async with asqlite.connect("main.db") as conn:
+                async with conn.cursor() as cursor:
+                    result = await cursor.execute("SELECT * FROM accounts WHERE email = ?", session['email'])
+                    request_json = json.loads(json.dumps(request.json))
+                    title = request.form['title']
+                    sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
+                    val = (str(title), int(session['account_id']), request_json)
+                    await cursor.execute(sql, val)
+
 
 @app.route('/about')
 async def about():
