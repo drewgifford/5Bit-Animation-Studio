@@ -140,6 +140,25 @@ class Canvas {
         return obj;
     }
 
+    initialize(data){
+
+        var frames = data.frames;
+
+        for(var frame in frames){
+            if(frame == 0) continue;
+            this.addFrame(frame-1);
+        }
+
+        this.data = frames;
+        this.setFrame(0);
+
+        $("#title").val(data.title);
+
+
+
+
+    }
+
     createFrame(){
         this.addFrame(this.frames.length-1);
         this.setFrame(this.frames.length-1);

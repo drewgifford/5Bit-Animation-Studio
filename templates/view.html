@@ -1,0 +1,67 @@
+{% extends "partial/base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <input name="title" type="text" id="title" class="title-input" value="Test Name" readonly>
+
+        <div class="row">
+            <div class="col-md-2">
+                <h5>Frame Controls</h5>
+
+                <div class="play-controls">
+
+                    <a class="btn btn-primary" id="play"><img class="pixel-icon" src="/static/img/icon_play.png"></a>
+                    <a class="btn btn-primary" id="pause"><img class="pixel-icon" src="/static/img/icon_pause.png"></a>
+                    <a class="btn btn-danger" id="stop"><img class="pixel-icon" src="/static/img/icon_stop.png"></a>
+
+                </div>
+
+                <a id="decrease" class="btn btn-primary">&lt;</a>
+                <input class="frame" type="number" id="frame" name="frame" value=1 readonly>
+                <a id="increase" class="btn btn-primary">&gt;</a>
+                
+                <a id="remix" class="mt-4 btn btn-success">Remix Animation</a>
+
+            </div>
+            <div class="col-md-8">
+                
+                <div class="boards">
+                    <canvas id="board"></canvas>
+                    <canvas id="overlayBoard"></canvas>
+                </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+        
+
+        </canvas>
+
+
+    </div>
+
+{% endblock %}
+
+{% block customscripts %}
+
+<script src="/static/js/Canvas.js"></script>
+<script src="/static/js/OverlayCanvas.js"></script>
+<script src="/static/js/viewer.js"></script>
+
+<script>
+
+    // Set the data with the JSON
+    var data = $.ajax({
+        type: 'GET',
+        url: '/view/get/',
+        data: JSON.stringify({id: 0}),
+        contentType: "application/json",
+        success: function(){
+            //board.initialize(data)
+        }
+    })
+
+</script>
+
+
+{% endblock %}
