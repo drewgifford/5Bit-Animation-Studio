@@ -1,0 +1,29 @@
+{% extends "partial/base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Profile: {{ user['username'] }}</h1>
+
+        <h3>My Animations</h3>
+         <a class="btn btn-success" href="/editor">Create an Animation</a>
+        
+        <div class="row mt-4">
+            {% for art in arts %}
+
+            <div class="col-md-3 col-sm-6 animation-entry">
+                <img class="gif" src='/static/gif/{{ art.id }}.gif'>
+                <h5 class="mb-0 mt-3"><a href="/view/{{ art.id }}">{{ art.title }}</a></h5>
+                <p class="light-blue mt-0 mb-0">By {{ art.author }}</p>
+
+                <a href="/editor/{{ art.id }}" class="mt-4 btn btn-primary">Edit</a>
+                <a href="/delete/{{ art.id }}" class="mt-4 btn btn-danger">Delete</a><br>&nbsp;
+            </div>
+
+            {% endfor %}
+        </div>
+        
+    </div>
+
+
+{% endblock %}

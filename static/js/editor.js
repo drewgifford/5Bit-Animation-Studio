@@ -171,13 +171,3 @@ $("#stop").click(function(){
 $("#deleteFrame").click(function(){
     board.removeFrame();
 });
-
-$("#save").click(function(){
-    var obj = board.getJson();
-    $.ajax({
-        type: 'POST',
-        contentType: 'application/json',
-        url: '/editor/submit',
-        data: JSON.stringify(obj)
-    });
-});

@@ -241,7 +241,7 @@ input[name="frame"]::-webkit-inner-spin-button {
 }
 #overlayBoard {
     pointer-events: none;
-    filter: opacity(0.1);
+    filter: opacity(0.2);
 }
 
 .play-controls {
@@ -281,4 +281,13 @@ input[type="text"],input[type="email"],input[type="password"] {
 }
 .title-input:focus {
     outline: none;
+}
+.gif {
+    width: 125px;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    display: block;
+    margin: auto;
+    margin-top: 15px;
 }

@@ -6,16 +6,21 @@
         <h1>5Bit Animation Studio</h1>
         <h5 class="cyan">&copy; 1992 FiveBit Systems, Inc.</h5>
 
-        <a class="btn btn-primary" href="/editor">TEMP Go to editor</a>
-        <a class="btn btn-danger" href="#">Danger Button</a>
+        <a class="btn btn-primary" href="/editor">Create an Animation</a>
 
+        
+        <div class="row mt-5">
+            {% for art in arts %}
 
-        <div class="row">
             <div class="col-md-3 col-sm-6 animation-entry">
-                <h5 class="mb-0 mt-3"><a href="#">Untitled Animation</a></h5>
-                <p class="light-blue mt-0">By Drew Gifford</p>
+                <img class="gif" src='/static/gif/{{ art.id }}.gif'>
+                <h5 class="mb-0 mt-3"><a href="/view/{{ art.id }}">{{ art.title }}</a></h5>
+                <p class="light-blue mt-0">By {{ art.author }}</p>
             </div>
+
+            {% endfor %}
         </div>
+        
     </div>
 
 

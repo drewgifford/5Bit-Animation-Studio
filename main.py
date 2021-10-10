@@ -16,6 +16,7 @@ import json
 import glob
 import math
 from PIL import Image
+import bleach
 
 app = Flask(__name__)
 
@@ -28,23 +29,91 @@ cipher_suite = Fernet(crypto_key)
 @app.route('/')
 async def home():
     user = {}
+
+    async with asqlite.connect("main.db") as conn:
+        async with conn.cursor() as cursor:
+            await cursor.execute('SELECT art_id, title, author_id FROM arts')
+            results = await cursor.fetchall()
+            print(results)
+
+            arts = []
+            for result in results:
+
+                art = {}
+                art['id'] = result['art_id']
+
+                await cursor.execute('SELECT username FROM accounts WHERE account_id = ?', result['author_id'])
+                author = await cursor.fetchone()
+
+                art['author'] = author[0]
+                art['title'] = result['title']
+
+                arts.append(art)
+
+            print(arts)
+
+            if 'email' in session:
+                user['account_id'] = session['account_id']
+                user['email'] = session['email']
+                user['username'] = session['user']
+                return render_template("home.html", user=user, arts=arts)
+            else:
+                return render_template("home.html", user=user, arts=arts)
+
+@app.route('/profile')
+async def profile():
+    user = {}
     if 'email' in session:
         user['account_id'] = session['account_id']
         user['email'] = session['email']
         user['username'] = session['user']
-        return render_template("home.html", user=user)
-    else:
-        return render_template("home.html", user=user)
+        
+        async with asqlite.connect("main.db") as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute('SELECT art_id, title, author_id FROM arts WHERE author_id = ?', user['account_id'])
+                results = await cursor.fetchall()
 
+                arts = []
+                for result in results:
+
+                    art = {}
+                    art['id'] = result['art_id']
+
+                    await cursor.execute('SELECT username FROM accounts WHERE account_id = ?', result['author_id'])
+                    author = await cursor.fetchone()
+
+                    art['author'] = author[0]
+                    art['title'] = result['title']
+
+                    arts.append(art)
+
+                return render_template("profile.html", user=user, arts=arts)
+
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/editor/<cloned_id>', methods=['GET', 'POST'])
+@app.route('/editor/', methods=['GET', 'POST'])
 @app.route('/editor', methods=['GET', 'POST'])
-async def editor():
+async def editor(cloned_id=None):
     user = {}
     
     if 'email' in session:
         user['account_id'] = session['account_id']
         user['email'] = session['email']
         user['username'] = session['user']
-        return render_template("editor/editor.html", user=user)
+        return render_template("editor/editor.html", user=user, cloned_id=cloned_id)
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/remix/<cloned_id>')
+async def remix(cloned_id=None):
+    user = {}
+    if 'email' in session:
+        user['account_id'] = session['account_id']
+        user['email'] = session['email']
+        user['username'] = session['user']
+        return render_template("editor/editor.html", user=user, cloned_id=cloned_id, remix=True)
     else:
         return redirect(url_for("login"))
 
@@ -54,12 +123,60 @@ async def submit():
         if request.method == 'POST':
             async with asqlite.connect("main.db") as conn:
                 async with conn.cursor() as cursor:
+
+                    
+
+                    request_json = request.get_json()
+
+                    await cursor.execute("SELECT author_id FROM arts WHERE art_id = ?", request_json['id'])
+                    id = await cursor.fetchone()
+
+                    print("ID", id[0])
+
+                    if(id[0]):
+                        if(id[0] == session['account_id']):
+                            await cursor.execute("UPDATE arts SET title = ?, pixels = ?", bleach.clean(str(request_json['title'])), str(request_json['frames']))
+                            return f'/view/{int(request_json["id"])}'
+
+
+                    print(request_json)
+                    title = request_json['title']
+                    sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
+                    val = (bleach.clean(str(title)), int(session['account_id']), str(request_json['frames']))
+                    await cursor.execute(sql, val)
+
+
+                    await cursor.execute(f"SELECT art_id FROM arts WHERE pixels = ?", str(request_json['frames']))
+                    result = await cursor.fetchone()
+                    
+                    # GENERATE GIF
+                    await boardToImage(int(result[0]), request_json['frames'])
+
+                    return f'/view/{int(result[0])}'
+
+
+@app.route('/remix/submit', methods=['GET', 'POST'])
+async def remixSubmit():
+    if 'email' in session:
+        if request.method == 'POST':
+            async with asqlite.connect("main.db") as conn:
+                async with conn.cursor() as cursor:
+
                     request_json = request.get_json()
                     print(request_json)
                     title = request_json['title']
                     sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
-                    val = (str(title), int(session['account_id']), str(request_json['frames']))
+                    val = (bleach.clean(str(title)), int(session['account_id']), str(request_json['frames']))
                     await cursor.execute(sql, val)
+
+
+                    await cursor.execute(f"SELECT art_id FROM arts WHERE pixels = ?", str(request_json['frames']))
+                    result = await cursor.fetchone()
+                    
+                    # GENERATE GIF
+                    await boardToImage(int(result[0]), request_json['frames'])
+
+                    return f'/view/{int(result[0])}'
 
 
 @app.route('/about')
@@ -147,6 +264,7 @@ async def view(art_id):
         user['account_id'] = session['account_id']
         user['email'] = session['email']
         user['username'] = session['user']
+
         return render_template("view.html", user=user, art_id=art_id)
     else:
         return render_template('view.html', user=user, art_id=art_id)
@@ -207,31 +325,21 @@ def closest_color(rgb):
     return min(color_diffs)[1]
 
 @app.route('/boardToImage', methods=['GET', 'POST'])
-async def boardToImage():
+async def boardToImage(id, obj):
+    images = []
 
-    if request.method == 'POST':
-        obj = request.get_json()
-        print(obj)
+    width = 32
 
-        images = []
-
-        width = 32
-
-        for i in range(len(obj)):
-            im = Image.new('RGB', (width, width), (0,0,0))
-            for x in range(32):
-                for y in range(32):
-                    im.putpixel((x,y), closest_color((obj[i][x][y][0], obj[i][x][y][1], obj[i][x][y][2])))
-            images.append(im)
-
-        print(images)
-
-    id = 0
+    for i in range(len(obj)):
+        im = Image.new('P', (width, width), (0,0,0))
+        for x in range(32):
+            for y in range(32):
+                im.putpixel((x,y), closest_color((obj[i][x][y][0], obj[i][x][y][1], obj[i][x][y][2])))
+        images.append(im)
 
     images[0].save(f'./static/gif/{id}.gif',
         save_all = True,
         append_images = images[1:],
-        optimize = False,
         duration = 10,
         loop = 0
     )
