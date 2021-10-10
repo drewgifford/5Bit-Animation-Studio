@@ -364,6 +364,10 @@ class Canvas {
         this.frames[this.currentFrame] = this.createNewData();
 
         this.setColor(this.color);
+
+        if(this.frames.length == 1){
+            this.overlayBoard.clear()
+        }
     }
 
     cloneData(data){
@@ -387,6 +391,7 @@ class Canvas {
         
         $.ajax({
             type: 'POST',
+            contentType: 'application/json',
             url: '/boardToImage',
             data: JSON.stringify(this.frames)
         });

@@ -39,7 +39,7 @@ class OverlayCanvas {
 
         if (x >= 0 && x < this.width && y >= 0 && y < this.height){
 
-            this.color[3] = 150;
+            this.color[3] = 255;
 
             this.data[x][y] = this.color;
 
@@ -61,6 +61,20 @@ class OverlayCanvas {
                 this.data[x][y] = data[x][y];
 
                 this.setColor(data[x][y]);
+                
+                this.draw(x,y);
+
+            }
+        }
+    }
+
+    clear(){
+        for(var x = 0; x < this.width; x++){
+            for(var y = 0; y < this.height; y++){
+
+                this.data[x][y] = [0,0,0,0];
+
+                this.setColor([0,0,0,255]);
                 
                 this.draw(x,y);
 

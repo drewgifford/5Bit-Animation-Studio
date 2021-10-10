@@ -13,6 +13,8 @@ from uuid import uuid4
 import email.message
 import datetime
 import json
+import glob
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -138,7 +140,7 @@ async def logout():
 async def boardToImage():
 
     if request.method == 'POST':
-        obj = request.form
+        obj = request.get_json()
         print(obj)
 
     return "hello world"
