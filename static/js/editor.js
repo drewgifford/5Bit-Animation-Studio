@@ -173,5 +173,9 @@ $("#deleteFrame").click(function(){
 });
 
 $("#save").click(function(){
-    console.log(JSON.stringify(board.getJson()));
+    var obj = {
+        frames: JSON.stringify(board.getJson()),
+        title: $("#title").val()
+    }
+    $.post("/editor/submit", obj)
 });
