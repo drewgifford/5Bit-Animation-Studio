@@ -139,17 +139,42 @@ async def logout():
     return redirect(url_for("login"))
 
 
-@app.route('/view')
-async def view():
+@app.route('/view/<art_id>', methods=['GET', 'POST'])
+async def view(art_id):
     user = {}
-    return render_template('view.html', user=user)
+    if 'email' in session:
+        user['account_id'] = session['account_id']
+        user['email'] = session['email']
+        user['username'] = session['user']
+        return render_template("view.html", user=user, art_id=art_id)
+    else:
+        return render_template('view.html', user=user, art_id=art_id)
 
-@app.route('/view/get', methods=['GET'])
-async def view():
-    user = {}
-
-    return "put a json object here"
-    # Return json object
+@app.route('/view/get/<art_id>', methods=['GET'])
+async def viewGet(art_id):
+    art = {}
+    if 'email' in session:
+        async with asqlite.connect("main.db") as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute(f"SELECT * FROM arts WHERE art_id = ?", art_id)
+                result = await cursor.fetchone()
+                await cursor.execute(f"SELECT username FROM accounts WHERE account_id = ?", int(result[2]))
+                author = await cursor.fetchone()
+                art['title'] = str(result[1])
+                art['author'] = str(author[0])
+                art['frames'] = result[3]
+        return art
+    else:
+        async with asqlite.connect("main.db") as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute(f"SELECT * FROM arts WHERE art_id = ?", art_id)
+                result = await cursor.fetchone()
+                await cursor.execute(f"SELECT username FROM accounts WHERE account_id = ?", int(result[2]))
+                author = await cursor.fetchone()
+                art['title'] = str(result[1])
+                art['author'] = str(author[0])
+                art['frames'] = result[3]
+        return art
     
 
 
