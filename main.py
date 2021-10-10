@@ -47,7 +47,7 @@ async def login():
         if result is None:
             error['email'] = 'That email is not registered in our system.'
             return render_template("login.html", error=error)
-        elif bytes(password, encoding='utf8') != cipher_suite.decrypt(bytes(result[2], encoding='utf8')):
+        elif bytes(password, encoding='utf8') != cipher_suite.decrypt(result[1]):
             error['password'] = 'Password is incorrect.'
             return render_template("login.html", error=error)
         else:
@@ -58,7 +58,7 @@ async def login():
     else:
         if "user" in session:
             return redirect(url_for("home"))
-        return render_template("login.html")
+        return render_template("login.html", error=error)
 
 @app.route('/signup', methods=['GET', 'POST'])
 async def signup():
@@ -87,7 +87,7 @@ async def signup():
                     error["confirmPassword"] = 'Passwords must match.'
                     return render_template("signup.html", error=error)
     else:
-        return render_template("signup.html")
+        return render_template("signup.html", error=error)
 
 @app.route('/about')
 async def about():
