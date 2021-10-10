@@ -58,7 +58,7 @@ async def submit():
                     print(request_json)
                     title = request_json['title']
                     sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
-                    val = (str(title), int(session['account_id']), request_json['frames'])
+                    val = (str(title), int(session['account_id']), str(request_json['frames']))
                     await cursor.execute(sql, val)
 
 
