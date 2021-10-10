@@ -383,5 +383,9 @@ class Canvas {
         return newData;
     }
 
+    convertToGif(){
+        
+    }
+
 
 }

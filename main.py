@@ -95,5 +95,14 @@ async def about():
 
 
 
+@app.route('/boardToImage', methods=['GET', 'POST'])
+async def boardToImage():
+
+    if request.method == 'POST':
+        obj = request.json['data']
+        print(obj)
+        
+
+
 if __name__ == "__main__":
     app.run(debug = True)
