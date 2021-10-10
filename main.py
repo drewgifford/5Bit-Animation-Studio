@@ -47,7 +47,7 @@ async def login():
         if result is None:
             error['email'] = 'That email is not registered in our system.'
             return render_template("login.html", error=error)
-        elif bytes(password, encoding='utf8') != cipher_suite.decrypt(bytes(result[2], encoding='utf8')):
+        elif bytes(password, encoding='utf8') != cipher_suite.decrypt(result[1]):
             error['password'] = 'Password is incorrect.'
             return render_template("login.html", error=error)
         else:
