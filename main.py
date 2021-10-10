@@ -72,7 +72,7 @@ async def delete(art_id):
                 await cursor.execute('SELECT * FROM arts WHERE author_id = ? and art_id = ?', user['account_id'], int(art_id))
                 result = await cursor.fetchone()
                 if int(session['account_id']) == int(result[2]):
-                    await cursor.execute('DELETE FROM art WHERE art_id = ?', int(art_id))
+                    await cursor.execute('DELETE FROM arts WHERE art_id = ?', int(art_id))
                     return redirect(url_for("profile"))
                 else:
                     return redirect(url_for("profile"))
