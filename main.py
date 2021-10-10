@@ -64,8 +64,13 @@ async def submit():
 @app.route('/about')
 async def about():
     user = {}
-
-    return render_template('about.html', user=user)
+    if 'email' in session:
+        user['account_id'] = session['account_id']
+        user['email'] = session['email']
+        user['username'] = session['user']
+        return render_template("about.html", user=user)
+    else:
+        return render_template("about.html", user=user)
 
 ### Account Routing ###
 
