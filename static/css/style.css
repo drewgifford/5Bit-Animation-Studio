@@ -76,67 +76,70 @@ body {
     color: black !important;
 }
 .btn.btn-danger {
-    background: #ff0000;
-    border: 2px solid #ff0000;
+    background: #aa0000;
+    border: 2px solid #aa0000;
     color: black !important;
 }
 .btn.btn-danger:hover {
     background: transparent;
-    color: #ff0000 !important;
+    color: #aa0000 !important;
 }  
 .btn.btn-success {
-    background: #00ff00;
-    border: 2px solid #00ff00;
+    background: #00aa00;
+    border: 2px solid #00aa00;
     color: black !important;
 }
 .btn.btn-success:hover {
     background: transparent;
-    color: #00ff00 !important;
+    color: #00aa00 !important;
 }  
-.cyan {
-    color: #00ffff;
-}
-.violet {
-    color: #ff00ff;
-}
-.yellow {
-    color: #ffff00;
-}
-.silver {
-    color: #c0c0c0;
-}
-.red {
-    color: #ff0000;
-}
-.lime {
-    color: #00ff00;
+.black {
+    color: #000;
 }
 .blue {
-    color: #0000ff;
-}
-.gray {
-    color: #808080;
-}
-.teal {
-    color: #008080;
-}
-.purple {
-    color: #800080;
-}
-.olive {
-    color: #808000;
-}
-.black {
-    color: #000000;
-}
-.maroon {
-    color: #800000;
+    color: #0000aa;
 }
 .green {
-    color: #008000;
+    color: #00aa00;
 }
-.navy {
-    color: #000080;
+.cyan {
+    color: #00aaaa;
+}
+.red {
+    color: #aa0000;
+}
+.magenta {
+    color: #aa00aa;
+}
+.brown {
+    color: #aa5500;
+}
+.light-gray {
+    color: #aaaaaa;
+}
+.dark-gray {
+    color: #555555;
+}
+.light-blue {
+    color: #5555ff;
+}
+.light-green {
+    color: #55ff55;
+}
+.light-cyan {
+    color: #55ffff;
+}
+.light-red {
+    color: #ff5555;
+}
+.light-magenta {
+    color: #ff55ff;
+}
+.yellow {
+    color: #ffff55;
+}
+.white {
+    color: #fff;
 }
 
 .tools {

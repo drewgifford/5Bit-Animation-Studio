@@ -89,7 +89,9 @@ async def signup():
     else:
         return render_template("signup.html")
 
-
+@app.route('/about')
+async def about():
+    return render_template('about.html')
 
 
 
