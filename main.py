@@ -24,13 +24,23 @@ cipher_suite = Fernet(crypto_key)
 
 @app.route('/')
 async def home():
-
-    return render_template("home.html")
+    user = {}
+    if 'email' in session:
+        user['email'] = session['email']
+        return render_template("home.html", user=user)
+    else:
+        return render_template("home.html", user=user)
 
 @app.route('/editor')
 async def editor():
 
     return render_template("editor/editor.html")
+
+@app.route('/about')
+async def about():
+    return render_template('about.html')
+
+### Account Routing ###
 
 @app.route('/login', methods=['GET', 'POST'])
 async def login():
@@ -89,9 +99,13 @@ async def signup():
     else:
         return render_template("signup.html", error=error)
 
-@app.route('/about')
-async def about():
-    return render_template('about.html')
+@app.route('/logout', methods=['GET', 'POST'])
+async def logout():
+    session.pop('email', None)
+    session.pop('user', None)
+    session.pop('account_id', None)
+    return redirect(url_for("login"))
+
 
 
 
