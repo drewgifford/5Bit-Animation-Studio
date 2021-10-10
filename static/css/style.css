@@ -271,3 +271,14 @@ input[type="text"],input[type="email"],input[type="password"] {
 .animation-entry {
     border: 1px solid white;
 }
+.title-input {
+    font-size: 36px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white !important;
+    width: 100%;
+}
+.title-input:focus {
+    outline: none;
+}
