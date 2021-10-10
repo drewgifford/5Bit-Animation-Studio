@@ -54,10 +54,11 @@ async def submit():
         if request.method == 'POST':
             async with asqlite.connect("main.db") as conn:
                 async with conn.cursor() as cursor:
-                    request_json = json.loads(json.dumps(request.json))
-                    title = request.form['title']
+                    request_json = request.get_json()
+                    print(request_json)
+                    title = request_json['title']
                     sql = ("INSERT INTO arts(title, author_id, pixels) VALUES(?,?,?)")
-                    val = (str(title), int(session['account_id']), request_json)
+                    val = (str(title), int(session['account_id']), request_json['frames'])
                     await cursor.execute(sql, val)
 
 

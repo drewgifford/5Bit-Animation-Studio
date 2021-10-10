@@ -173,10 +173,7 @@ $("#deleteFrame").click(function(){
 });
 
 $("#save").click(function(){
-    var obj = {
-        frames: JSON.stringify(board.getJson()),
-        title: $("#title").val()
-    }
+    var obj = board.getJson();
     $.ajax({
         type: 'POST',
         contentType: 'application/json',

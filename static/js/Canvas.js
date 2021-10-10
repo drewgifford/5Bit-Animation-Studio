@@ -133,8 +133,8 @@ class Canvas {
 
     getJson(){
         var obj = {
-            name: this.name,
-            author: this.author,
+            title: $('#title').val(),
+            //author: this.author,
             frames: this.frames
         }
         return obj;
@@ -150,7 +150,7 @@ class Canvas {
             }
             this.setFrame(x);
             this.setData(frames[x]);
-            
+
             if(x != 0){
                 this.newStep();
             }
@@ -411,17 +411,6 @@ class Canvas {
         }
 
         return newData;
-    }
-
-    convertToGif(){
-        
-        $.ajax({
-            type: 'POST',
-            contentType: 'application/json',
-            url: '/boardToImage',
-            data: JSON.stringify(this.frames)
-        });
-
     }
 
 
