@@ -139,6 +139,18 @@ async def logout():
     return redirect(url_for("login"))
 
 
+@app.route('/view')
+async def view():
+    user = {}
+    return render_template('view.html', user=user)
+
+@app.route('/view/get', methods=['GET'])
+async def view():
+    user = {}
+
+    return "put a json object here"
+    # Return json object
+    
 
 
 # This function ensures that the colors people select MUST be one of the 16 predefined colors. No hacking
